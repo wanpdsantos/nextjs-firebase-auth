@@ -2,14 +2,19 @@ import { Button, Typography } from "@mui/material";
 import Header from "../../components/Core_header";
 import CORE_Layout from "../../components/Core_layout";
 import useFirebaseAuth from "../../hooks/useFirebaseAuth";
-import { useRouter } from 'next/router';
 import CORE_Alert from "../../components/Core_alert";
 import { useState } from "react";
 
 const ProfilePage = () => {
   const [AlertMsg, setAlertMsg] = useState({title:'',severity:'',message:''});
   const { authUser, signOutUser }:any = useFirebaseAuth();
-  const router = useRouter();
+
+  const SignOut = async () => {
+    const singOut = await signOutUser();
+    if (singOut.error) {
+      setAlertMsg({title:'Login Error',severity:'error',message:singOut.errorMsg});
+    }
+  }
 
   if (!authUser) {
     return (
@@ -19,13 +24,6 @@ const ProfilePage = () => {
       </CORE_Layout>
     );
   };
-
-  const SignOut = async () => {
-    const singOut = await signOutUser();
-    if (singOut.error) {
-      setAlertMsg({title:'Login Error',severity:'error',message:singOut.errorMsg})
-    }
-  }
 
   return (
     <CORE_Layout title={'Profile Page'}>

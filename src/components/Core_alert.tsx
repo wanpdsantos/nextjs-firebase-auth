@@ -7,7 +7,7 @@ import AlertTitle from '@mui/material/AlertTitle';
 export default function CORE_Alert({ data }:any) {
   const[AlertMsg, setAlertMsg] = React.useState(false);
   useEffect(()=>{
-    if (data.severity !== undefined) {
+    if (data.severity !== '') {
       setAlertMsg(true);
     };
   },[data]);

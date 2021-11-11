@@ -11,9 +11,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from '@mui/material/Typography';
 import CORE_Layout from '../components/Core_layout';
-import { useRouter } from 'next/router';
 import CORE_Alert from '../components/Core_alert';
-import { Alert } from '@mui/material';
 
 const Copyright = () => {
   return (
@@ -31,11 +29,9 @@ const Copyright = () => {
 const SignInScreen = () => {
   const [AlertMsg, setAlertMsg] = useState({title:'',severity:'',message:''});
   const { signInEmailAndPassword }:any = useFirebaseAuth();
-  const router = useRouter();
 
   const login = async (event:any) => {
     event.preventDefault();
-
     const login = await signInEmailAndPassword(event.target[0].value, event.target[2].value);
     if (login.error) {
       setAlertMsg({title:'Login Error',severity:'error',message:login.errorMsg})
