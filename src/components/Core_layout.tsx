@@ -20,7 +20,7 @@ export default function CORE_Layout ({children, title}:LayoutProps) {
         display:'flex',
         flexDirection:'column',
         overflow:'hidden',
-        width:'100vw'
+        width:'100vw',
       }}>
         {children}
       </Box>
