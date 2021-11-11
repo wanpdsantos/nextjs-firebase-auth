@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Link } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -16,10 +16,11 @@ const Header = () => {
           >
             NEXTJs Firebase Authentication
           </Container>
-          <Button variant="outlined" color='secondary' startIcon={<PersonIcon />}>
-            Sign In
-          </Button>
-
+          <Link href='/signIn'>
+            <Button variant="outlined" color='secondary' startIcon={<PersonIcon />}>
+              Sign In
+            </Button>
+          </Link>
         </Toolbar>
       </AppBar>
       <Box height='5em'></Box>

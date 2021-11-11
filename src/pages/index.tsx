@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import Header from "../components/Core_header";
-import CORE_Layout from "../components/core_layout";
+import CORE_Layout from "../components/Core_layout";
 
 const Homepage = () => {
   return (
