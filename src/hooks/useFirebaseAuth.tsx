@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '@firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@firebase/auth';
 import { initializeApp } from 'firebase/app';
+import { useRouter } from 'next/router';
 
 const app = initializeApp({
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,38 +18,32 @@ export default function useFirebaseAuth() {
   const [authUser, setAuthUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const auth = getAuth();
+  const router = useRouter();
 
   const clear = () => {
     setAuthUser(null);
     setLoading(true);
   };
 
-  const signInEmailAndPassword = (email:string, password:string) => {
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-      console.log('justUser: ', user);
-      setAuthUser({uid: userCredential.user, email: userCredential.user});
-    })
-    .catch((error:any) => {
-      console.log('Error: ',error.code , 'Message: ', error.message)
-    });
+  const signInEmailAndPassword = async (email:string, password:string) => {
+    try{
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push('/user/profile');
+      return {error:false, errorMsg: ''}
+    } catch(err:any) {
+      return {error:true, errorMsg: err.message}
+    }
   }
 
-  const createUserEmailAndPassword = (email:string, password:string) =>{
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in 
-      const user = userCredential.user;
-    })
-    .catch((error:any) => {
-      console.log('Error: ',error.code , 'Message: ', error.message)
-    });
-  }
-    
-  const signOut = () => {
-    auth.signOut().then(clear);
+  const signOutUser = async () => {
+    try{
+      await signOut(auth);
+      clear();
+      router.push('/');
+      return {error:false, errorMsg: ''}
+    } catch (err:any) {
+      return {error:true, errorMsg: err.message}
+    }
   }
     
   const authStateChanged = async (authState:any) => {
@@ -57,10 +52,8 @@ export default function useFirebaseAuth() {
       setLoading(false)
       return;
     }
-
     setLoading(true)
     const formattedUser = formatAuthUser(authState);
-    console.log('formtedUser: ', formattedUser);
     setAuthUser(formattedUser);    
     setLoading(false);
   };
@@ -68,12 +61,12 @@ export default function useFirebaseAuth() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(authStateChanged);
     return () => unsubscribe();
-  }, []);
+  }, [auth]);
 
   return {
     authUser,
     loading,
     signInEmailAndPassword,
-    signOut
+    signOutUser
   };
 }
